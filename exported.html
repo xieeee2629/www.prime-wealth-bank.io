@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>www.prime-wealth-bank.io</title>
+</head>
+<body>
+<script>
+(function() {
+  // 创建断网遮罩层
+  const overlay = document.createElement('div');
+  overlay.id = 'networkOverlay';
+  overlay.style.display = 'none';
+  overlay.innerHTML = `
+    <div class="container">
+      <div class="earth"></div>
+      <h1 class="title">你似乎未连接到 Internet</h1>
+      <p class="description">错误代码: ERR_INTERNET_DISCONNECTED</p>
+      <div class="retry-info">
+        <span>请尝试：</span>
+      </div>
+      <button class="retry-button">刷新</button>
+      <div class="game-info">
+        想在等待时玩游戏吗? <span>启动游戏</span>
+      </div>
+    </div>
+  `;
+  Object.assign(overlay.style, {
+    position: 'fixed',
+    top: 0,
+    left:0,
+    width: '100%',
+    height: '100%',
+    background: '#f8f9fa',
+    color: '#343a40',
+    zIndex: 99999,
+    fontFamily: 'system-ui, sans-serif',
+    display: 'flex',
+    alignItems: 'left',
+    justifyContent: 'left',
+    textAlign: 'left'
+  });
+  document.body.appendChild(overlay);
+
+  // 创建顶部加载条（初始隐藏）
+  const loadingBar = document.createElement('div');
+  loadingBar.id = 'fakeLoadingBar';
+  Object.assign(loadingBar.style, {
+    position: 'fixed',
+    top: 0,                     // 改为顶部
+    left: 0,
+    width: '0%',
+    height: '3px',
+    background: 'linear-gradient(90deg, #3a8cff, #00c6ff, #3a8cff)',
+    backgroundSize: '200% 100%',
+    animation: 'shine 1.5s linear infinite',
+    zIndex: 100000,
+    display: 'none',
+    borderRadius: '0 0 2px 0',  // 底部圆角改为右下角（可选）
+    transition: 'width 0.05s linear'
+  });
+  document.body.appendChild(loadingBar);
+
+  // 添加渐变光效动画
+  const style = document.createElement('style');
+  style.textContent = `
+  @keyframes shine {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+  @keyframes zoomFade {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+  }
+  @keyframes explode {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: translate(${Math.random()*200-100}px, ${Math.random()*200-100}px) scale(3); opacity: 0; }
+  }
+  .container {
+    max-width: 600px;
+    padding: 2rem;
+    padding-left: 10%;
+  }
+  .earth {
+    content:url('https://img.zhangpingguo.com/web/xtcw/logo.webp');
+    width: 9rem;
+    margin-top: 7rem;
+    margin-bottom: 2rem;
+  }
+  .title { margin-bottom: 1rem; }
+  .description { font-size: 1rem; color: #6c757d; margin-bottom: 2rem; }
+  .retry-info { font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .retry-button {
+    padding: 7px 16px;
+    font-size: 1.2rem;
+    background: #0070C6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .retry-button:hover { opacity: 0.9; }
+  .retry-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .game-info {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+  }
+  .game-info span {
+    cursor: pointer;
+    color: #0070C6;
+  }
+  `;
+  document.head.appendChild(style);
+
+  // 获取按钮
+  const retryBtn = overlay.querySelector('.retry-button');
+
+  // 加载条动画：10% 处卡 3 秒，渐变动态效果已通过 CSS 实现
+  function startLoading() {
+    loadingBar.style.display = 'block';
+    let width = 0;
+    const step = () => {
+      if (width < 10) {
+        width += 1;
+        loadingBar.style.width = width + '%';
+        setTimeout(step, 30);
+      } else if (width === 10) {
+        // 在 10% 停留 3 秒
+        setTimeout(() => {
+          width += 1;
+          loadingBar.style.width = width + '%';
+          // 继续加载到 100%
+          const continueLoading = setInterval(() => {
+            if (width < 100) {
+              width += 2;
+              loadingBar.style.width = width + '%';
+            } else {
+              clearInterval(continueLoading);
+              // 加载完成，弹出彩蛋
+              showEasterEgg();
+            }
+          }, 20);
+        }, 3000);
+      } else if (width < 100) {
+        width += 2;
+        loadingBar.style.width = width + '%';
+        setTimeout(step, 20);
+      }
+    };
+    step();
+  }
+
+  // 点击按钮触发加载条
+  retryBtn.addEventListener('click', function() {
+    retryBtn.disabled = true;
+    startLoading();
+  });
+
+  // 彩蛋动画（与之前相同）
+  function showEasterEgg() {
+    overlay.style.display = 'none';
+    loadingBar.style.display = 'none';
+    const animationContainer = document.createElement('div');
+    Object.assign(animationContainer.style, {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      pointerEvents: 'none',
+      zIndex: 100000
+    });
+    document.body.appendChild(animationContainer);
+
+    const colors = ['❤️', '🎊', '🎁', '✨', '🎉'];
+    for(let i=0; i<80; i++) {
+      const emoji = document.createElement('div');
+      emoji.textContent = colors[Math.floor(Math.random()*colors.length)];
+      Object.assign(emoji.style, {
+        position: 'absolute',
+        left: `${Math.random()*100}%`,
+        top: `${Math.random()*100}%`,
+        fontSize: `${25 + Math.random()*30}px`,
+        animation: `explode ${1.5 + Math.random()*2}s ease-out both`
+      });
+      animationContainer.appendChild(emoji);
+    }
+    const text = document.createElement('div');
+    text.innerHTML = '愚人节快乐！';
+    Object.assign(text.style, {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      fontSize: '1.5rem',
+      textShadow: '0 0 20px rgba(255,255,0,0.8)',
+      animation: 'zoomFade 3s ease-out forwards'  
+    });
+    animationContainer.appendChild(text);
+    setTimeout(() => {
+      animationContainer.remove();
+    }, 3000);
+  }
+
+  // 直接显示断网界面
+  overlay.style.display = 'flex';
+})();
+</script>
+</body>
+</html>
