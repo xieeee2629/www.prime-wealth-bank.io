@@ -8,7 +8,6 @@
 <body>
 <script>
 (function() {
-  // 创建断网遮罩层
   const overlay = document.createElement('div');
   overlay.id = 'networkOverlay';
   overlay.style.display = 'none';
@@ -42,13 +41,11 @@
     textAlign: 'left'
   });
   document.body.appendChild(overlay);
-
-  // 创建顶部加载条（初始隐藏）
   const loadingBar = document.createElement('div');
   loadingBar.id = 'fakeLoadingBar';
   Object.assign(loadingBar.style, {
     position: 'fixed',
-    top: 0,                     // 改为顶部
+    top: 0,
     left: 0,
     width: '0%',
     height: '3px',
@@ -57,12 +54,11 @@
     animation: 'shine 1.5s linear infinite',
     zIndex: 100000,
     display: 'none',
-    borderRadius: '0 0 2px 0',  // 底部圆角改为右下角（可选）
+    borderRadius: '0 0 2px 0',
     transition: 'width 0.05s linear'
   });
   document.body.appendChild(loadingBar);
 
-  // 添加渐变光效动画
   const style = document.createElement('style');
   style.textContent = `
   @keyframes shine {
@@ -120,7 +116,6 @@
   // 获取按钮
   const retryBtn = overlay.querySelector('.retry-button');
 
-  // 加载条动画：10% 处卡 3 秒，渐变动态效果已通过 CSS 实现
   function startLoading() {
     loadingBar.style.display = 'block';
     let width = 0;
@@ -130,18 +125,16 @@
         loadingBar.style.width = width + '%';
         setTimeout(step, 30);
       } else if (width === 10) {
-        // 在 10% 停留 3 秒
         setTimeout(() => {
           width += 1;
           loadingBar.style.width = width + '%';
-          // 继续加载到 100%
           const continueLoading = setInterval(() => {
             if (width < 100) {
               width += 2;
               loadingBar.style.width = width + '%';
             } else {
               clearInterval(continueLoading);
-              // 加载完成，弹出彩蛋
+
               showEasterEgg();
             }
           }, 20);
@@ -155,7 +148,6 @@
     step();
   }
 
-  // 点击按钮触发加载条
   retryBtn.addEventListener('click', function() {
     retryBtn.disabled = true;
     startLoading();
@@ -207,7 +199,6 @@
     }, 3000);
   }
 
-  // 直接显示断网界面
   overlay.style.display = 'flex';
 })();
 </script>
